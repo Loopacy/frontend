@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <h1>Neon</h1>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="wishlist.html">Wishlist</a></li>
+                <li><a href="cart.html">Cart</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <div id="cart-summary">
+            <h3>Total: <span id="total-price">$0.00</span></h3>
+            <button id="checkout-button" onclick="location.href='checkout.html'">Proceed to Checkout</button>
+
+        </div>
+    </main>
+    <footer>
+        <p>© 2024 Loopacy</p>
+    </footer>
+    <script src="../app.js"></script>
+</body>
+</html>
+
+
+<style> .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.quantity-controls button:hover {
+    background-color: #0056b3;
+}
+
+#cart-summary {
+    margin-top: 2rem;
+    text-align: right;
+}
+
+#checkout-button {
+    background-color: #27382b;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#checkout-button:hover {
+    background-color: #218838;
+}
+</style>

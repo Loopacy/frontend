@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Website</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar" role="navigation" aria-label="Main Navigation">
+            <h1>Loopacy</h1>
+            <input type="text" id="search-bar" placeholder="Re-discover" />
+            <button id="nav-toggle" aria-label="Toggle Navigation Menu">☰</button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pages/wishlist.html">Wishlist</a></li>
+                <li><a href="pages/cart.html">Cart</a></li>
+                <li><a href="pages/contact.html">Contact</a></li>
+                <li><a href="pages/login.html">Login</a></li>
+                <li><a href="pages/signup.html">Sign Up</a></li>
+                <li><a href="pages/neon.html">Neon</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="flash-message"></div>
+    <main>
+        <section>
+            <h2>Did someone have a bright idea?</h2>
+            <div id="product-list">
+                <noscript>
+                    <p>Please enable JavaScript to see the products.</p>
+                </noscript>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Loopacy</p>
+    </footer>
+    
+    <!-- Include the frontend JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
+
