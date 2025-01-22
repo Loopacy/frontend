@@ -298,3 +298,4 @@ document.addEventListener("DOMContentLoaded", () => {
     updateWishlistUI();
     renderProducts();  // Ensure products are rendered on page load
 });
+
