@@ -1,15 +1,27 @@
 // Global States
 let cart = [];
 let wishlist = [];
+let products = [];  // Declare a global products array
 
-// Initialize wishlist on page load
+// Initialize wishlist and load data on page load
 document.addEventListener("DOMContentLoaded", () => {
-    // Retrieve the wishlist from localStorage (if exists)
-    wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    // Load cart and wishlist data from localStorage
+    loadCart();
+    loadWishlist();
+
+    // Fetch products from the backend
+    fetchProducts();  // Fetch products here
 
     // Update the UI to reflect the initial state of the wishlist
     updateWishlistUI();
     renderProducts(); // Ensure products are rendered on page load
+    updateCartPage();
+    updateWishlistPage();
+    setupSearch();
+    setupNavToggle();
+    setupProductDetailsPage();
+    setupAuthHandlers();
+    setupReviewSystem();
 });
 
 // Toggle Wishlist function to add/remove items
@@ -87,36 +99,47 @@ function removeFromWishlist(productId) {
     updateWishlistUI(); // Reflect changes on the main product page
 }
 
+// Add to Cart
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    if (product && !cart.some(item => item.id === productId)) {
+        cart.push(product);
+        saveToLocalStorage("cart", cart);
+        showFlashMessage(`${product.name} added to your cart!`, "success");
+        updateCartPage();
+    }
+}
 
-// Sample products (available globally)
-const products = [
-    { id: 1, name: "Product 1", price: "$10", image: "https://via.placeholder.com/200" },
-    { id: 2, name: "Product 2", price: "$20", image: "https://via.placeholder.com/200" },
-    { id: 3, name: "Product 3", price: "$30", image: "https://via.placeholder.com/200" },
-    { id: 4, name: "Product 4", price: "$40", image: "https://via.placeholder.com/200" },
-];
-
-// Initialize App
-document.addEventListener("DOMContentLoaded", () => {
-    renderProducts();
-    loadCart();
-    loadWishlist();
+// Remove from Cart
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    saveToLocalStorage("cart", cart);
+    showFlashMessage("Product removed from your cart!", "success");
     updateCartPage();
-    updateWishlistPage();
-    setupSearch();
-    setupNavToggle();
-    setupProductDetailsPage();
-    setupAuthHandlers();
-    setupReviewSystem();
-});
+}
+
+// Update Cart Page
+function updateCartPage() {
+    const cartItemsContainer = document.getElementById("cart-items");
+    if (!cartItemsContainer) return;
+
+    cartItemsContainer.innerHTML = cart.length
+        ? cart.map(item => `
+            <div class="cart-item">
+                <p>${item.name} - ${item.price}</p>
+                <button onclick="removeFromCart(${item.id})">Remove</button>
+            </div>
+        `).join("")
+        : "<p>Your cart is empty!</p>";
+}
 
 // Render Products with Wishlist Button
-function renderProducts(productsToRender = products) {
+function renderProducts() {
     const productList = document.getElementById("product-list");
     if (!productList) return;
 
-    productList.innerHTML = productsToRender.map(product => {
-        const isInWishlist = wishlist.includes(product.id); // Check if the product is in the wishlist
+    productList.innerHTML = products.map(product => {
+        const isInWishlist = wishlist.some(item => item.id === product.id); // Check if product is in wishlist
         const heartClass = isInWishlist ? "fas fa-heart" : "far fa-heart"; // Set heart class based on wishlist state
         return `
             <div class="product-card">
@@ -142,41 +165,10 @@ function renderProducts(productsToRender = products) {
     }).join("");
 }
 
-// Add to Cart
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    if (product && !cart.some(item => item.id === productId)) {
-        cart.push(product);
-        saveToLocalStorage("cart", cart);
-        showFlashMessage(`${product.name} added to your cart!`, "success");
-        updateCartPage();
-    }
+// Go to Product Details Page
+function goToProductDetails(productId) {
+    window.location.href = `product-details.html?id=${productId}`;
 }
-
-// Remove from Cart
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    saveToLocalStorage("cart", cart);
-    showFlashMessage("Product removed from your cart!", "success");
-    updateCartPage();
-}
-
-
-// Update Cart Page
-function updateCartPage() {
-    const cartItemsContainer = document.getElementById("cart-items");
-    if (!cartItemsContainer) return;
-
-    cartItemsContainer.innerHTML = cart.length
-        ? cart.map(item => `
-            <div class="cart-item">
-                <p>${item.name} - ${item.price}</p>
-                <button onclick="removeFromCart(${item.id})">Remove</button>
-            </div>
-        `).join("")
-        : "<p>Your cart is empty!</p>";
-}
-
 
 // Search Products
 function setupSearch() {
@@ -233,6 +225,7 @@ function loadWishlist() {
     wishlist = loadFromLocalStorage("wishlist") || [];
 }
 
+// Fetch products from backend API
 function fetchProducts() {
     fetch('https://loopacy-be.onrender.com/products')  // Correct URL to backend API
         .then(response => response.json())
@@ -249,52 +242,3 @@ function fetchProducts() {
             showFlashMessage('Failed to load products. Please try again later.', 'error');
         });
 }
-
-
-// Render Products with Wishlist Button
-function renderProducts() {
-    const productList = document.getElementById("product-list");
-    if (!productList) return;
-
-    productList.innerHTML = products.map(product => {
-        const isInWishlist = wishlist.some(item => item.id === product.id); // Check if product is in wishlist
-        const heartClass = isInWishlist ? "fas fa-heart" : "far fa-heart"; // Set heart class based on wishlist state
-        return `
-            <div class="product-card">
-                <img src="${product.image}" alt="${product.name}">
-                <h3>${product.name}</h3>
-                <p>${product.price}</p>
-                <button onclick="addToCart(${product.id})">Add to Cart</button>
-                <button 
-                    onclick="goToProductDetails(${product.id})" 
-                    class="details-button"
-                >
-                    View Details
-                </button>
-                <button 
-                    class="wishlist-button" 
-                    data-id="${product.id}"
-                    onclick="toggleWishlist(${product.id})"
-                >
-                    <i class="${heartClass}"></i>
-                </button>
-            </div>
-        `;
-    }).join("");
-}
-// Initialize App
-document.addEventListener("DOMContentLoaded", () => {
-    // Retrieve the wishlist from localStorage (if exists)
-    wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
-    // Load cart and wishlist data from localStorage
-    loadCart();
-    loadWishlist();
-
-    // Fetch products from the backend
-    fetchProducts();  // Fetch products here
-
-    // Update the UI to reflect the initial state of the wishlist
-    updateWishlistUI();
-    renderProducts();  // Ensure products are rendered on page load
-});
