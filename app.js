@@ -233,9 +233,8 @@ function loadWishlist() {
     wishlist = loadFromLocalStorage("wishlist") || [];
 }
 
-// Fetch products from backend API
 function fetchProducts() {
-    fetch('http://localhost:3000/products')  // Adjust the URL to your backend route
+    fetch('https://loopacy-be.onrender.com/products')  // Correct URL to backend API
         .then(response => response.json())
         .then(data => {
             if (data && Array.isArray(data) && data.length > 0) {
@@ -250,6 +249,7 @@ function fetchProducts() {
             showFlashMessage('Failed to load products. Please try again later.', 'error');
         });
 }
+
 
 // Render Products with Wishlist Button
 function renderProducts() {
@@ -298,4 +298,3 @@ document.addEventListener("DOMContentLoaded", () => {
     updateWishlistUI();
     renderProducts();  // Ensure products are rendered on page load
 });
-
